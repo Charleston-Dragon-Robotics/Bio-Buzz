@@ -38,24 +38,40 @@ public class aprilTagging extends LinearOpMode {
                 .build();
 
 
+        double previous = 0;
+        double kp = 0.075;
+        double kd = 0.065;
+
         waitForStart();
         while (opModeIsActive()) {
 //            if  () {
-//                telemetry.addData("x", detection.ftcPose.x);
-//                telemetry.addData("ID:", detection.id);
-//                telemetry.update();
+
 //            }
 
             if (processor.getDetections().size() > 0) {
                 AprilTagDetection detection = processor.getDetections().get(0);
-                if (detection.ftcPose.x > 0) {
-                    servo.setPower(-1);
-                } else if (detection.ftcPose.x < 0) {
-                    servo.setPower(1);
-                } else {
-                    servo.setPower(0);
+                telemetry.addLine("X: "+ detection.ftcPose.x);
+                telemetry.addLine("ID: " + detection.id);
+                telemetry.update();
+
+                double derivative = detection.ftcPose.x - previous;
+
+                if(detection.ftcPose.x < -0.2){
+//                    servo.setPower(Math.min(Math.max(detection.ftcPose.x - .2, 0), 1));
+                    servo.setPower(((detection.ftcPose.x - .2) * kp) + (derivative * kd));
+                }else if(detection.ftcPose.x > 0.2){
+//                    servo.setPower(Math.max(Math.min(detection.ftcPose.x + .2, 0), -1));
+                    servo.setPower(((Math.abs(detection.ftcPose.x) - .2) * kp) + (derivative * kd));
+
                 }
+                previous = detection.ftcPose.x;
+            } else {
+                telemetry.addLine("Nothing found!");
+                telemetry.update();
+                servo.setPower(0);
             }
+
+
 
         }
     }
