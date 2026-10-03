@@ -1,17 +1,22 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class driveTrain {
 
-    //    Create motor objects here
+        //Create motor objects here
     private DcMotor FrontRM = null;
     private DcMotor FrontLM = null;
     private DcMotor BackRM = null;
     private DcMotor BackLM = null;
+
+    private DcMotorEx flyWheelM = null;
 
     private LinearOpMode opmode = null;
 
@@ -25,14 +30,15 @@ public class driveTrain {
         opmode = opMode;
         hwMap = opMode.hardwareMap;
 
-        // name motor objects here
+//         name motor objects here
         FrontRM = hwMap.dcMotor.get("FrontRM");
         FrontLM = hwMap.dcMotor.get("FrontLM");
         BackRM = hwMap.dcMotor.get("BackRM");
         BackLM = hwMap.dcMotor.get("BackLM");
+        flyWheelM = (DcMotorEx)hwMap.dcMotor.get("flyWheel");
 
 
-        // directions!!!
+//         directions!!!
         FrontLM.setDirection(DcMotorSimple.Direction.REVERSE);
         FrontRM.setDirection(DcMotorSimple.Direction.FORWARD);
         BackLM.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -42,12 +48,14 @@ public class driveTrain {
         FrontRM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BackLM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BackRM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        flyWheelM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        // set motor powers to 0
+//         set motor powers to 0
         FrontRM.setPower(0);
         FrontLM.setPower(0);
         BackRM.setPower(0);
         BackLM.setPower(0);
+
     }
 
     public void multi(double y, double x, double yaw) {
@@ -56,5 +64,6 @@ public class driveTrain {
         FrontRM.setPower(y - x - yaw);
         BackRM.setPower(y + x - yaw);
     }
+
 
 }
