@@ -56,5 +56,4 @@ public class driveTrain {
         FrontRM.setPower(y - x - yaw);
         BackRM.setPower(y + x - yaw);
     }
-
 }
