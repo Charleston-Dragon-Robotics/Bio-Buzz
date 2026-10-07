@@ -1,0 +1,22 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+
+import org.firstinspires.ftc.teamcode.GamepadStates;
+
+@TeleOp(name = "RGBIndacatorTest", group = "Teleop")
+public class RGBIndacatorTest extends LinearOpMode{
+
+    @Override
+    public void runOpMode() throws InterruptedException{
+
+        GamepadStates newGamePad1 = new GamepadStates(gamepad1);
+        waitForStart();
+
+        while (opModeIsActive()){
+
+        }
+    }
+}
