@@ -16,6 +16,7 @@ import org.firstinspires.ftc.vision.apriltag.*;
 
 @Autonomous(name = "April Tags", group = "Autonomous")
 public class aprilTagging extends LinearOpMode {
+    Boolean Debug = Boolean.TRUE;
     private CRServo servo = null;
 
     private AprilTagProcessor processor;

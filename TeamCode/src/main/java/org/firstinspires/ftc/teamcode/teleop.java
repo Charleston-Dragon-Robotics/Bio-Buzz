@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.app.Activity;
+import android.os.Debug;
 import android.view.View;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
@@ -31,6 +32,8 @@ public class teleop extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
+        Boolean Debug = Boolean.TRUE;
+
         int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
         relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
 
@@ -38,7 +41,7 @@ public class teleop extends LinearOpMode {
         driveTrain Train = new driveTrain();
 
         // initialize subassembly classes
-        Train.init(this);
+        Train.init(this, Debug);
 
         //limelight = hardwareMap.get(Limelight3A.class, "limelight");
 //        telemetry.setMsTransmissionInterval(11);
@@ -52,6 +55,8 @@ public class teleop extends LinearOpMode {
 
         double speed = 0.5;
 
+        if (Debug == Boolean.TRUE){telemetry.addLine("Telop initalized");}
+
         waitForStart();
 
         while (opModeIsActive()) {
@@ -61,9 +66,9 @@ public class teleop extends LinearOpMode {
 
 
             if(newGamePad1.left_trigger.state) {
-                Train.multi(-gamepad1.left_stick_y/2, gamepad1.left_stick_x/2, gamepad1.right_stick_x/2);
+                Train.multi(-gamepad1.left_stick_y/2, gamepad1.left_stick_x/2, gamepad1.right_stick_x/2, Debug);
             } else {
-                Train.multi(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+                Train.multi(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, Debug);
             }
 
 
