@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.os.Debug;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -15,7 +17,9 @@ public class Launcher {
     public Launcher() {
     }
 
-    public void init(LinearOpMode opMode) {
+    public void init(LinearOpMode opMode, boolean Debug) {
+        if(Debug){opMode.telemetry.addLine("Launcher init start");}
+
         HardwareMap hwMap;
 
         opmode = opMode;
@@ -27,9 +31,12 @@ public class Launcher {
 
         flyWheelM.setPower(0);
 
+        if(Debug){opMode.telemetry.addLine("Launcher init complete");}
+        opMode.telemetry.update();
     }
 
-    public void velocityTest() {
+    public void velocityTest(boolean Debug) {
+        if(Debug){opmode.telemetry.addLine("velocityTest");}
         flyWheelM.setPower(1);
         double currentV = flyWheelM.getVelocity();
         opmode.telemetry.addData("Velocity (ticks/second: ", currentV);
