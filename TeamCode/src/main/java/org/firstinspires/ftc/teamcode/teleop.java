@@ -36,9 +36,13 @@ public class teleop extends LinearOpMode {
 
         // declare subassembly classes
         driveTrain Train = new driveTrain();
+        limeLighters LL = new limeLighters();
+        newIntake Intake = new newIntake();
 
         // initialize subassembly classes
         Train.init(this);
+        LL.init(this);
+        Intake.init(this);
 
         //limelight = hardwareMap.get(Limelight3A.class, "limelight");
 //        telemetry.setMsTransmissionInterval(11);
@@ -61,16 +65,21 @@ public class teleop extends LinearOpMode {
 
 
             if(newGamePad1.left_trigger.state) {
-                Train.multi(-gamepad1.left_stick_y/2, gamepad1.left_stick_x/2, gamepad1.right_stick_x/2);
+                Train.multi(gamepad1.left_stick_y/2, -gamepad1.left_stick_x/2, gamepad1.right_stick_x/2);
             } else {
-                Train.multi(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+                Train.multi(gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x);
             }
 
-
-//            LL.detectPattern();
-
-            // controls movement
-
+            if(newGamePad1.b.state) {
+                Intake.intake(speed);
+            } else {
+                if(newGamePad1.a.state) {
+                    Intake.reverseIntake(speed);
+                } else {
+                    Intake.stop();
+                }
+            }
+            LL.showObject();
 
             //initialize speed as a variable
             telemetry.addData("Speed: ", speed);

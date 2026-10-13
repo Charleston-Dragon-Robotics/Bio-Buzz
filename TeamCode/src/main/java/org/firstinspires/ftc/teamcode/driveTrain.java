@@ -7,13 +7,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class driveTrain {
 
-    //    Create motor objects here
+    private LinearOpMode opmode = null;
     private DcMotor FrontRM = null;
     private DcMotor FrontLM = null;
     private DcMotor BackRM = null;
     private DcMotor BackLM = null;
-
-    private LinearOpMode opmode = null;
 
 
     public driveTrain() {
@@ -33,8 +31,8 @@ public class driveTrain {
 
 
         // directions!!!
-        FrontLM.setDirection(DcMotorSimple.Direction.REVERSE);
-        FrontRM.setDirection(DcMotorSimple.Direction.FORWARD);
+        FrontLM.setDirection(DcMotorSimple.Direction.FORWARD);
+        FrontRM.setDirection(DcMotorSimple.Direction.REVERSE);
         BackLM.setDirection(DcMotorSimple.Direction.REVERSE);
         BackRM.setDirection(DcMotorSimple.Direction.FORWARD);
 
@@ -51,10 +49,10 @@ public class driveTrain {
     }
 
     public void multi(double y, double x, double yaw) {
-            FrontLM.setPower(y + x + yaw);
-            BackLM.setPower(y - x + yaw);
-            FrontRM.setPower(y - x - yaw);
-            BackRM.setPower(y + x - yaw);
-        }
+        FrontLM.setPower(y + x + yaw);
+        BackLM.setPower(y - x + yaw);
+        FrontRM.setPower(y - x - yaw);
+        BackRM.setPower(y + x - yaw);
+    }
 
 }
