@@ -35,7 +35,6 @@ public class driveTrain {
         FrontLM = hwMap.dcMotor.get("FrontLM");
         BackRM = hwMap.dcMotor.get("BackRM");
         BackLM = hwMap.dcMotor.get("BackLM");
-        flyWheelM = (DcMotorEx)hwMap.dcMotor.get("flyWheel");
 
 
 //         directions!!!
@@ -48,7 +47,6 @@ public class driveTrain {
         FrontRM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BackLM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BackRM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        flyWheelM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
 //         set motor powers to 0
         FrontRM.setPower(0);
