@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
@@ -18,6 +19,8 @@ import java.util.Locale;
 
 public class Launcher {
 
+    private static ElapsedTime stopwatch = new ElapsedTime();
+
     private DcMotorEx flyWheelM = null;
     private CRServo turnTableSer = null;
 
@@ -25,10 +28,12 @@ public class Launcher {
 
     double maxV = 0;
 
-    double minError = 1000;
+    double minError = 9999;
     double minKf = 0;
 
     double kfidx = 0;
+
+    double idealKp = 0;
 
     public Launcher() {
     }
@@ -62,26 +67,34 @@ public class Launcher {
         }
 
     }
+    public void setZeroToFloat() {
+    flyWheelM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+    }
+    public void setZeroToBrake() {
+        flyWheelM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
 
     public double velocityTest(boolean Debug) {
-        if (Debug) {
-            opmode.telemetry.addLine("velocityTest");
+        stopwatch.reset();
+        while (stopwatch.time()<3) {
+            if (Debug) {
+                opmode.telemetry.addLine("velocityTest");
+            }
+            flyWheelM.setPower(1);
+            double currentV = flyWheelM.getVelocity();
+
+            opmode.telemetry.addData("Velocity (ticks/second: ", currentV);
+
+            if (maxV < currentV) {
+                maxV = currentV;
+            }
         }
-        flyWheelM.setPower(1);
-        double currentV = flyWheelM.getVelocity();
-
-        opmode.telemetry.addData("Velocity (ticks/second: ", currentV);
-
-        if (maxV < currentV) {
-            maxV = currentV;
-        }
-
         return maxV;
     }
 
     public double kfTest(double target, double kf, boolean Debug) {
         kfidx = kf / 2;
-        while (kfidx < (2 * kf)) {
+        while (kfidx < (kf)) {
             double currentV = flyWheelM.getVelocity();
             double error = target - currentV;
             velocity(kfidx, target);
@@ -102,6 +115,12 @@ public class Launcher {
         }
         stop();
         return minKf;
+    }
+
+    public double KpTest(double kf, boolean Debug){
+        while (0 <= idealKp && idealKp <= 2){
+
+        }
     }
 
     public double getV() {
