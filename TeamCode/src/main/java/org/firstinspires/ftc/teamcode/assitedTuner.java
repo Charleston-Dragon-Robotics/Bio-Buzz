@@ -24,12 +24,12 @@ public class assitedTuner extends LinearOpMode {
 
         boolean Debug = true;
 
-        int VarIDX = 0;
+        int VarIDX = 3;
 
         double changeVal = 0;
 
         double maxVelocity = 0;
-        int targetVelocity = 1200;
+        int targetVelocity = 1500;
 
         double idealKf = 0;
 
@@ -65,18 +65,12 @@ public class assitedTuner extends LinearOpMode {
                 telemetry.update();
             }
 
-            if (newGamePad1.left_bumper.released) {
-                VarIDX = VarIDX - 1;
-            } else if (newGamePad1.right_bumper.released) {
-                VarIDX = VarIDX + 1;
-            }
-
             switch (VarIDX) {
                 case 0:
 
-                        maxVelocity = Launch.velocityTest(Debug);
-                        telemetry.addData("Max reading: ", maxVelocity);
-                        telemetry.update();
+                    maxVelocity = Launch.velocityTest(Debug);
+                    telemetry.addData("Max reading: ", maxVelocity);
+                    telemetry.update();
 
                     telemetry.addLine("finished case zero while loop");
                     Launch.stop();
@@ -92,11 +86,26 @@ public class assitedTuner extends LinearOpMode {
                     VarIDX = 2;
                     break;
                 case 2:
-                    Launch.velocity(idealKf, targetVelocity);
+                    Launch.velocity(0 , idealKf, targetVelocity);
                     if (newGamePad1.dpad_left.released && targetVelocity >= 100) {
                         targetVelocity -= 100;
                     } else if (newGamePad1.dpad_right.released && targetVelocity <= (maxVelocity - 100)) {
                         targetVelocity += 100;
+                    }
+                    if (newGamePad1.left_bumper.released && targetVelocity >= 50) {
+                        targetVelocity -= 50;
+                    } else if (newGamePad1.right_bumper.released && targetVelocity <= (maxVelocity - 50)) {
+                        targetVelocity += 50;
+                    }
+                    if (newGamePad1.x.released && targetVelocity >= 25) {
+                        targetVelocity -= 25;
+                    } else if (newGamePad1.b.released && targetVelocity <= (maxVelocity - 25)) {
+                        targetVelocity += 25;
+                    }
+                    if (newGamePad1.a.released && targetVelocity >= 10) {
+                        targetVelocity -= 10;
+                    } else if (newGamePad1.y.released && targetVelocity <= (maxVelocity - 10)) {
+                        targetVelocity += 10;
                     }
 
                     double error = targetVelocity - Launch.getV();
@@ -107,7 +116,13 @@ public class assitedTuner extends LinearOpMode {
                     VarIDX = 2;
                     break;
                 case 3:
-
+                    Launch.kpTest(7.22, targetVelocity, Debug);
+                    break;
+//                case 3:
+////                    telemetry.addLine("Case 3 started");
+//                    telemetry.update();
+//                    Launch.KpTest(1200, 7.27, Debug);
+//                    break;
             }
 //
 //            switch (VarIDX % 5) {

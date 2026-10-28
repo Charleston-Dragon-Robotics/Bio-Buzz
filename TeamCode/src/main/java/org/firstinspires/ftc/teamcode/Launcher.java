@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.os.Debug;
+import android.sax.StartElementListener;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -9,12 +9,14 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
-import com.qualcomm.robotcore.hardware.Servo;
+
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Hashtable;
 
-import java.util.Locale;
+import java.util.List;
 
 
 public class Launcher {
@@ -30,10 +32,11 @@ public class Launcher {
 
     double minError = 9999;
     double minKf = 0;
+    double minKp = 0;
+    double kpidx = 0;
 
     double kfidx = 0;
 
-    double idealKp = 0;
 
     public Launcher() {
     }
@@ -50,7 +53,7 @@ public class Launcher {
 
         flyWheelM = (DcMotorEx) hwMap.dcMotor.get("flyWheelM");
 
-        flyWheelM.setDirection(DcMotorSimple.Direction.FORWARD);
+        flyWheelM.setDirection(DcMotorSimple.Direction.REVERSE);
 
         flyWheelM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
@@ -67,16 +70,18 @@ public class Launcher {
         }
 
     }
+
     public void setZeroToFloat() {
-    flyWheelM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        flyWheelM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
+
     public void setZeroToBrake() {
         flyWheelM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public double velocityTest(boolean Debug) {
         stopwatch.reset();
-        while (stopwatch.time()<3) {
+        while (stopwatch.time() < 3) {
             if (Debug) {
                 opmode.telemetry.addLine("velocityTest");
             }
@@ -94,11 +99,11 @@ public class Launcher {
 
     public double kfTest(double target, double kf, boolean Debug) {
         kfidx = kf / 2;
-        while (kfidx < (kf)) {
+        while (kfidx < (2 * kf / 3)) {
             double currentV = flyWheelM.getVelocity();
             double error = target - currentV;
-            velocity(kfidx, target);
-            opmode.telemetry.addData("set velocity: ",target + kfidx * error);
+            velocity(0, kfidx, target);
+            opmode.telemetry.addData("set velocity: ", target + kfidx * error);
             opmode.telemetry.addData("KfIdx: ", kfidx);
             opmode.telemetry.addData("Current Velocity: ", currentV);
             opmode.telemetry.addData("Current error: ", error);
@@ -111,17 +116,140 @@ public class Launcher {
             opmode.telemetry.addData("Min error: ", minError);
             opmode.telemetry.addData("Min KF: ", minKf);
             opmode.telemetry.update();
-            kfidx += 0.5;
+            kfidx += 0.1;
         }
         stop();
         return minKf;
     }
 
-    public double KpTest(double kf, boolean Debug){
-        while (0 <= idealKp && idealKp <= 2){
+    public double kpTest(double kf, double target, boolean Debug) {
+        boolean VDip = false;
+        while (kpidx < 2) {
+            double currentV = flyWheelM.getVelocity();
+            double error = target - currentV;
+            velocity(kpidx, kf, target);
+            opmode.telemetry.addData("set velocity: ", target + kfidx * error);
+            opmode.telemetry.addData("KfIdx: ", kf);
+            opmode.telemetry.addData("Current Velocity: ", currentV);
+            opmode.telemetry.addData("Current error: ", error);
+            opmode.telemetry.update();
+            opmode.sleep(1000);
+            while (!VDip) {
 
+                if (error > 45) {
+                    VDip = true;
+                    opmode.telemetry.addData("Dip Detected? ", VDip);
+                    opmode.telemetry.update();
+                    kpidx = 4;
+
+                }
+            }
         }
+        return minKp;
     }
+
+//    public double KpTest(double targetVelocity, double kf, boolean Debug){
+//        set(targetVelocity);
+//        opmode.sleep(2000);
+//
+//        boolean dipDetected    = false;
+//        double currentVelocity = 0;
+//        double error           = 0;
+//        double kpidx           = 0;
+//        double idealKp         = 0;
+//        double minRiseTime     = 9999;
+//
+//        double kpMin1 = 9999;
+//        double kpMin2 = 9999;
+//
+//        Dictionary KpValueDict = new Hashtable();
+//         List<Boolean> riseTimeListed = new ArrayList<>();
+//
+//        while ( kpidx <= 2){
+//
+//            velocity(idealKp, kf, targetVelocity);
+//            dipDetected = false;
+//            currentVelocity = getV();
+//            error = Math.abs(currentVelocity - targetVelocity);
+//
+//
+//
+//            if (Debug){opmode.telemetry.addData("Kp:",idealKp);}
+//
+//            while (!dipDetected){
+//                 currentVelocity = getV();
+//                 error = Math.abs(currentVelocity - targetVelocity);
+//                if(Debug){opmode.telemetry.addData("error: ", error);}
+//                opmode.telemetry.update();
+//                if (error > 50) {
+//                    stopwatch.reset();
+//                    dipDetected = true;
+//                }
+//            }
+//
+//            if(Debug){opmode.telemetry.addData("error: ", error);}
+//            if(Debug){opmode.telemetry.addData("Dip detected? ", dipDetected);}
+//            opmode.telemetry.update();
+//            if (error <= 25 && error >= -25 ){
+//                if(Debug){opmode.telemetry.addLine("In loop *****************");}
+//                opmode.telemetry.update();
+//                KpValueDict.put((double) kpidx,(double) stopwatch.time());
+//                if (minRiseTime > stopwatch.time() ){
+//                    minRiseTime = stopwatch.time();
+//                    idealKp = kpidx;
+//                }
+//                kpidx += 0.5;
+//
+//            }
+//
+//        }
+//        for (int _ = 0; _ < 2; ){
+//            riseTimeListed = (List<Boolean>) KpValueDict.elements();
+//
+//            for (double val = 0; val < riseTimeListed.size();) {
+//                if (val < kpMin1) {
+//                    kpMin2 = kpMin1;
+//                    kpMin1 = val;
+//                } else if (val < kpMin2) {
+//                    kpMin2 = val;
+//                }
+//            }
+//
+//            idealKp = (double)KpValueDict.get((double) kpMin1) / (double)KpValueDict.get((double) kpMin2);
+//
+//            velocity(idealKp,kf, targetVelocity);
+//
+//            if (Debug){opmode.telemetry.addData("Kp:",idealKp);}
+//
+//            while (!dipDetected){
+//                currentVelocity = getV();
+//                error = Math.abs(currentVelocity - targetVelocity);
+//                if(Debug){opmode.telemetry.addData("error: ", error);}
+//                if (error > 50) {
+//                    stopwatch.reset();
+//                    dipDetected = true;
+//                }
+//            }
+//
+//            if(Debug){opmode.telemetry.addData("Dip detected? ", dipDetected);}
+//            opmode.telemetry.update();
+//
+//            if(Debug){opmode.telemetry.addData("Dip detected? ", dipDetected);}
+//            opmode.telemetry.update();
+//            if (error == 0 ) {
+//                KpValueDict.put((double) kpidx, (double) minRiseTime);
+//                if (minRiseTime > stopwatch.time()) {
+//                    minRiseTime = stopwatch.time();
+//                    idealKp = kpidx;
+//                }
+//            }
+//
+//        }
+//
+//
+//
+//        return idealKp;
+//    }
 
     public double getV() {
         return flyWheelM.getVelocity();
@@ -137,8 +265,8 @@ public class Launcher {
 
     }
 
-    public void velocity(double kf, double target) {
-        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(0, 0, 0 ,kf);
+    public void velocity(double kp, double kf, double target) {
+        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(kp, 0, 0, kf);
         flyWheelM.setVelocity(target);
     }
 
@@ -232,7 +360,7 @@ public class Launcher {
         }
     }
 
-    public void set(int Velocity) {
+    public void set(double Velocity) {
         flyWheelM.setVelocity(Velocity);
     }
 
