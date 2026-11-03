@@ -24,7 +24,7 @@ public class assitedTuner extends LinearOpMode {
 
         boolean Debug = true;
 
-        int VarIDX = 3;
+        int VarIDX = 0;
 
         double changeVal = 0;
 
@@ -32,6 +32,8 @@ public class assitedTuner extends LinearOpMode {
         int targetVelocity = 1500;
 
         double idealKf = 0;
+        double idealKp = 0;
+        double maxError = 0;
 
         double kf = 0;
         double kp = 0;
@@ -86,7 +88,7 @@ public class assitedTuner extends LinearOpMode {
                     VarIDX = 2;
                     break;
                 case 2:
-                    Launch.velocity(0 , idealKf, targetVelocity);
+                    Launch.velocity(0, idealKf, targetVelocity);
                     if (newGamePad1.dpad_left.released && targetVelocity >= 100) {
                         targetVelocity -= 100;
                     } else if (newGamePad1.dpad_right.released && targetVelocity <= (maxVelocity - 100)) {
@@ -113,106 +115,23 @@ public class assitedTuner extends LinearOpMode {
                     telemetry.addData("Error: ", error);
                     telemetry.update();
                     newGamePad1.updateState();
-                    VarIDX = 2;
+                    if (newGamePad1.start.released) {
+                        VarIDX = 3;
+                    }
                     break;
                 case 3:
-                    Launch.kpTest(7.22, targetVelocity, Debug);
+                    maxError = Launch.errorTuner(idealKf, targetVelocity, Debug);
+                    VarIDX = 4;
+                case 4:
+                    idealKp = Launch.kpTest(idealKf, targetVelocity, maxError, Debug);
+                    VarIDX = 5;
                     break;
-//                case 3:
-////                    telemetry.addLine("Case 3 started");
-//                    telemetry.update();
-//                    Launch.KpTest(1200, 7.27, Debug);
-//                    break;
+                case 5:
+                    Launch.velocity(idealKp, idealKf, targetVelocity);
+                    break;
+
             }
-//
-//            switch (VarIDX % 5) {
-//                case 0:
-//                    telemetry.addLine("Case: 0, TargetVelocity");
-//                    telemetry.addData("Target velocity", targetVelocity);
-//                    telemetry.addLine("A = 50 and B = 100 ");
-//                    if (newGamePad1.a.released) {
-//                        changeVal = 50;
-//                        if (Debug){
-//                            telemetry.addLine("changeval set to 50");
-//                        }
-//                    } else if (newGamePad1.b.released) {
-//                        changeVal = 100;
-//                        if (Debug) {
-//                            telemetry.addLine("changeval set to 100");
-//                        }
-//                    }
-//                    if (Debug){
-//                        telemetry.addData("changeVal = ",changeVal);
-//                    }
-//                    telemetry.addLine("Dpad up will add and Dpad down will subtract");
-//                    if (newGamePad1.dpad_down.released) {
-//                        targetVelocity += changeVal;
-//                    } else if (newGamePad1.dpad_up.released) {
-//                        targetVelocity -= changeVal;
-//                    }
-//                    telemetry.update();
-//                    break;
-//                case 1:
-//                    telemetry.addData("Kf", kf);
-//                    telemetry.addLine("A = .5 and B = 1 ");
-//                    if (newGamePad1.a.released) {
-//                        changeVal = .5;
-//                    } else if (newGamePad1.b.released) {
-//                        changeVal = 1;
-//                    }
-//                    telemetry.addLine("Dpad up will add and Dpad down will subtract");
-//                    if (newGamePad1.dpad_down.released) {
-//                        kf += changeVal;
-//                    } else if (newGamePad1.dpad_up.released) {
-//                        kf -= changeVal;
-//                    }
-//                    break;
-//                case 2:
-//                    telemetry.addData("kp", kp);
-//                    telemetry.addLine("A = .05 and B = .1 ");
-//                    if (newGamePad1.a.released) {
-//                        changeVal = .05;
-//                    } else if (newGamePad1.b.released) {
-//                        changeVal = .1;
-//                    }
-//                    telemetry.addLine("Dpad up will add and Dpad down will subtract");
-//                    if (newGamePad1.dpad_down.released) {
-//                        kp += changeVal;
-//                    } else if (newGamePad1.dpad_up.released) {
-//                        kp -= changeVal;
-//                    }
-//                    break;
-//                case 3:
-//                    telemetry.addData("ki", ki);
-//                    telemetry.addLine("A = .05 and B = .1 ");
-//                    if (newGamePad1.a.released) {
-//                        changeVal = .05;
-//                    } else if (newGamePad1.b.released) {
-//                        changeVal = .1;
-//                    }
-//                    telemetry.addLine("Dpad up will add and Dpad down will subtract");
-//                    if (newGamePad1.dpad_down.released) {
-//                        ki += changeVal;
-//                    } else if (newGamePad1.dpad_up.released) {
-//                        ki -= changeVal;
-//                    }
-//                    break;
-//                case 4:
-//                    telemetry.addData("kd", kd);
-//                    telemetry.addLine("A = .05 and B = .1 ");
-//                    if (newGamePad1.a.released) {
-//                        changeVal = .05;
-//                    } else if (newGamePad1.b.released) {
-//                        changeVal = .1;
-//                    }
-//                    telemetry.addLine("Dpad up will add and Dpad down will subtract");
-//                    if (newGamePad1.dpad_down.released) {
-//                        kd += changeVal;
-//                    } else if (newGamePad1.dpad_up.released) {
-//                        kd -= changeVal;
-//                    }
-//            }
-//            Launch.tuningTest(targetVelocity,kf,kp,ki,kd);
+
         }
     }
 }

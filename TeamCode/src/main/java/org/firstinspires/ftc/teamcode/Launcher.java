@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.sax.StartElementListener;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,12 +9,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Hashtable;
-
-import java.util.List;
 
 
 public class Launcher {
@@ -31,6 +23,8 @@ public class Launcher {
     double maxV = 0;
 
     double minError = 9999;
+
+    double minRise = 9999;
     double minKf = 0;
     double minKp = 0;
     double kpidx = 0;
@@ -122,87 +116,101 @@ public class Launcher {
         return minKf;
     }
 
-    public double kpTest(double kf, double target, boolean Debug) {
+    public double errorTuner(double kf, double target, boolean Debug){
+        velocity(0, kf,target);
+
+        boolean dipDetected  = false;
+        boolean idealFound   = false;
+        double MaxError = 0;
+
+        while (!idealFound) {
+            double error =target - getV();
+            while (!dipDetected) {
+                 error = target - getV();
+
+                if (error > 55) {
+                    MaxError = error;
+                    dipDetected = true;
+                }
+            }
+            if (MaxError < error ){
+             MaxError = error;
+            } else if (dipDetected && MaxError > error){
+                idealFound = true;
+            }
+        }
+        return MaxError;
+
+    }
+
+    public double kpTest(double kf, double target, double maxError, boolean Debug) {
         boolean VDip = false;
+
         while (kpidx < 2) {
-            double currentV = flyWheelM.getVelocity();
-            double error = target - currentV;
+            double riseTime = 0;
+//            double currentV = flyWheelM.getVelocity();
+            double error = target - getV();
             velocity(kpidx, kf, target);
-            opmode.telemetry.addData("set velocity: ", target + kfidx * error);
-            opmode.telemetry.addData("KfIdx: ", kf);
-            opmode.telemetry.addData("Current Velocity: ", currentV);
+            opmode.telemetry.addData("target velocity: ", target );
+            opmode.telemetry.addData("KpIdx: ", kpidx);
+            opmode.telemetry.addData("Current Velocity: ", getV());
             opmode.telemetry.addData("Current error: ", error);
             opmode.telemetry.update();
-            opmode.sleep(1000);
-            while (!VDip) {
+            while (!VDip && error > 5) {
+                error = target - getV();
+                opmode.telemetry.addData("Spinning up",null);
+                opmode.telemetry.update();
+            }
 
-                if (error > 45) {
+            while (!VDip) {
+                velocity(kpidx, kf, target);
+                error = target - getV();
+                opmode.telemetry.addData("Error: ", error);
+                opmode.telemetry.addData("Waiting for dip...", null);
+                opmode.telemetry.update();
+                if (error > 65) {
+                    stopwatch.reset();
                     VDip = true;
                     opmode.telemetry.addData("Dip Detected? ", VDip);
                     opmode.telemetry.update();
-                    kpidx = 4;
-
+//                    opmode.sleep(500);
                 }
             }
+
+            if(Debug){opmode.telemetry.addData("error: ", error);}
+            if(Debug){opmode.telemetry.addData("Dip detected? ", VDip);}
+            opmode.telemetry.update();
+
+            while (VDip && error > 0) {
+
+                error = target - getV();
+                opmode.telemetry.addData("Rising...", null);
+                opmode.telemetry.update();
+
+            }
+
+            riseTime = stopwatch.time();
+            opmode.telemetry.addData("Logged rise time: ", riseTime);
+            opmode.telemetry.update();
+
+            if (riseTime < minRise) {
+                minRise = riseTime;
+                minKp = kpidx;
+            }
+            VDip = false;
+            kpidx += 0.25;
+
+
         }
+        for(int _ = 0; _ < 2;){
+            
+        }
+        opmode.telemetry.addData("Min Rise Time: ", minRise);
+        opmode.telemetry.addData("Min Kp: ", minKp);
+        opmode.telemetry.update();
         return minKp;
     }
 
-//    public double KpTest(double targetVelocity, double kf, boolean Debug){
-//        set(targetVelocity);
-//        opmode.sleep(2000);
-//
-//        boolean dipDetected    = false;
-//        double currentVelocity = 0;
-//        double error           = 0;
-//        double kpidx           = 0;
-//        double idealKp         = 0;
-//        double minRiseTime     = 9999;
-//
-//        double kpMin1 = 9999;
-//        double kpMin2 = 9999;
-//
-//        Dictionary KpValueDict = new Hashtable();
-//         List<Boolean> riseTimeListed = new ArrayList<>();
-//
-//        while ( kpidx <= 2){
-//
-//            velocity(idealKp, kf, targetVelocity);
-//            dipDetected = false;
-//            currentVelocity = getV();
-//            error = Math.abs(currentVelocity - targetVelocity);
-//
-//
-//
-//            if (Debug){opmode.telemetry.addData("Kp:",idealKp);}
-//
-//            while (!dipDetected){
-//                 currentVelocity = getV();
-//                 error = Math.abs(currentVelocity - targetVelocity);
-//                if(Debug){opmode.telemetry.addData("error: ", error);}
-//                opmode.telemetry.update();
-//                if (error > 50) {
-//                    stopwatch.reset();
-//                    dipDetected = true;
-//                }
-//            }
-//
-//            if(Debug){opmode.telemetry.addData("error: ", error);}
-//            if(Debug){opmode.telemetry.addData("Dip detected? ", dipDetected);}
-//            opmode.telemetry.update();
-//            if (error <= 25 && error >= -25 ){
-//                if(Debug){opmode.telemetry.addLine("In loop *****************");}
-//                opmode.telemetry.update();
-//                KpValueDict.put((double) kpidx,(double) stopwatch.time());
-//                if (minRiseTime > stopwatch.time() ){
-//                    minRiseTime = stopwatch.time();
-//                    idealKp = kpidx;
-//                }
-//                kpidx += 0.5;
-//
-//            }
-//
-//        }
 //        for (int _ = 0; _ < 2; ){
 //            riseTimeListed = (List<Boolean>) KpValueDict.elements();
 //
@@ -236,7 +244,7 @@ public class Launcher {
 //
 //            if(Debug){opmode.telemetry.addData("Dip detected? ", dipDetected);}
 //            opmode.telemetry.update();
-//            if (error == 0 ) {
+//            if (dipDetected && error =< 20   ) {
 //                KpValueDict.put((double) kpidx, (double) minRiseTime);
 //                if (minRiseTime > stopwatch.time()) {
 //                    minRiseTime = stopwatch.time();
@@ -250,6 +258,7 @@ public class Launcher {
 //
 //        return idealKp;
 //    }
+
 
     public double getV() {
         return flyWheelM.getVelocity();
