@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.subassembly;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -201,9 +201,6 @@ public class Launcher {
             kpidx += 0.25;
 
 
-        }
-        for(int _ = 0; _ < 2;){
-            
         }
         opmode.telemetry.addData("Min Rise Time: ", minRise);
         opmode.telemetry.addData("Min Kp: ", minKp);
