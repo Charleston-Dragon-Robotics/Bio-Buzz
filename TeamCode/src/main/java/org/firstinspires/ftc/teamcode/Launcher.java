@@ -10,13 +10,16 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import java.util.Hashtable;
+
 
 public class Launcher {
 
     private static ElapsedTime stopwatch = new ElapsedTime();
 
     private DcMotorEx flyWheelM = null;
-    private CRServo turnTableSer = null;
+    private CRServo turnTableServo1 = null;
+    private CRServo turnTableServo2 = null;
 
     private LinearOpMode opmode = null;
 
@@ -55,8 +58,8 @@ public class Launcher {
 
         flyWheelM.setPower(0);
 
-//        turnTableSer = hwMap.CRservo.get("turnTableSer");
-        turnTableSer = hwMap.crservo.get("turnTableSer");
+        turnTableServo1 = hwMap.crservo.get("turnTableServo1");
+        turnTableServo2 = hwMap.crservo.get("turnTableServo2");
 
 
         if (Debug) {
@@ -146,6 +149,8 @@ public class Launcher {
     public double kpTest(double kf, double target, double maxError, boolean Debug) {
         boolean VDip = false;
 
+        Hashtable<Double, Double> timetable = new Hashtable<Double, Double>();
+
         while (kpidx < 2) {
             double riseTime = 0;
 //            double currentV = flyWheelM.getVelocity();
@@ -193,20 +198,21 @@ public class Launcher {
             opmode.telemetry.addData("Logged rise time: ", riseTime);
             opmode.telemetry.update();
 
-            if (riseTime < minRise) {
-                minRise = riseTime;
-                minKp = kpidx;
-            }
+            timetable.put((Double) kpidx,(Double) riseTime);
+
+
             VDip = false;
             kpidx += 0.25;
 
 
         }
         for(int _ = 0; _ < 2;){
+
             
         }
-        opmode.telemetry.addData("Min Rise Time: ", minRise);
-        opmode.telemetry.addData("Min Kp: ", minKp);
+//        opmode.telemetry.addData("Min Rise Time: ", minRise);
+//        opmode.telemetry.addData("Min Kp: ", minKp);
+        opmode.telemetry.addData("hashTable",timetable);
         opmode.telemetry.update();
         return minKp;
     }
@@ -362,19 +368,20 @@ public class Launcher {
         }
     }
 
-    public void turnTableRotation(double power, boolean Debug) {
-        turnTableSer.setPower(power);
-        if (Debug) {
-            opmode.telemetry.addData("turnTableSer power", power);
-        }
-    }
-
     public void set(double Velocity) {
         flyWheelM.setVelocity(Velocity);
     }
 
     public void stop() {
         flyWheelM.setPower(0);
+    }
+
+    public void TTPower(double power, boolean Debug){
+        turnTableServo1.setPower(power);
+        turnTableServo2.setPower(power);
+        if (Debug) {
+            opmode.telemetry.addData("turnTableServos power", power);
+        }
     }
 
 
