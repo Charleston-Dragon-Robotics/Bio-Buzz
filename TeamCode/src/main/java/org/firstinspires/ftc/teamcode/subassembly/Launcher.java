@@ -262,11 +262,11 @@ public class Launcher {
     }
 
     public void tuningTest(int targetVelocity, double kf, double kp, double ki, double kd) {
-        double curent = flyWheelM.getVelocity();
-        double error = targetVelocity - curent;
+        double current = flyWheelM.getVelocity();
+        double error = targetVelocity - current;
         flyWheelM.setVelocity((targetVelocity * kf / 60) + (error * kp) + (error * ki) + (error * kd));
         opmode.telemetry.addData("Target speed: ", targetVelocity);
-        opmode.telemetry.addData("Current speed: ", curent);
+        opmode.telemetry.addData("Current speed: ", current);
         opmode.telemetry.addData("error: ", error);
 
     }
@@ -298,11 +298,11 @@ public class Launcher {
         if (Debug) {
             opmode.telemetry.addData("    --hiveLaunch-- kd tuner", kd);
         }
-        double curent = flyWheelM.getVelocity();
+        double current = flyWheelM.getVelocity();
         if (Debug) {
-            opmode.telemetry.addData("    --hiveLaunch-- Current launcher velocity", curent);
+            opmode.telemetry.addData("    --hiveLaunch-- Current launcher velocity", current);
         }
-        double error = targetVelocity - curent;
+        double error = targetVelocity - current;
         if (Debug) {
             opmode.telemetry.addData("    --hiveLaunch-- error from target velocity", error);
         }
@@ -331,11 +331,11 @@ public class Launcher {
         if (Debug) {
             opmode.telemetry.addData("    --flowerLaunch-- kd tuner", kd);
         }
-        double curent = flyWheelM.getVelocity();
+        double current = flyWheelM.getVelocity();
         if (Debug) {
-            opmode.telemetry.addData("    --flowerLaunch-- Current launcher velocity", curent);
+            opmode.telemetry.addData("    --flowerLaunch-- Current launcher velocity", current);
         }
-        double error = targetVelocity - curent;
+        double error = targetVelocity - current;
         if (Debug) {
             opmode.telemetry.addData("    --flowerLaunch-- error from target velocity", error);
         }

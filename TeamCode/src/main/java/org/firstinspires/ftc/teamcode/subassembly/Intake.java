@@ -32,10 +32,10 @@ public class Intake {
     public void fullPower(){
         IntakeM.setPower(1);
     }
-    public void control(int power){
+    public void control(double power){
         IntakeM.setPower(power);
     }
-    public void fullRevers(){
+    public void fullReverse(){
         IntakeM.setPower(-1);
     }
     public void stop(){

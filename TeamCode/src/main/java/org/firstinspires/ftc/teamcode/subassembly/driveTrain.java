@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class driveTrain {
 
-        //Create motor objects here
+    //Create motor objects here
     private DcMotor FrontRM = null;
     private DcMotor FrontLM = null;
     private DcMotor BackRM = null;
@@ -61,5 +61,10 @@ public class driveTrain {
         BackRM.setPower(y + x - yaw);
     }
 
-
+    public void stop() {
+        FrontRM.setPower(0);
+        FrontLM.setPower(0);
+        BackRM.setPower(0);
+        BackLM.setPower(0);
+    }
 }
