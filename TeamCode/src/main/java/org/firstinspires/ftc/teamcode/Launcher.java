@@ -200,16 +200,21 @@ public class Launcher {
 
             timetable.put((Double) kpidx,(Double) riseTime);
 
+            if (riseTime < minRise){
+                minRise = riseTime;
+                minKp = kpidx;
+            }
+
 
             VDip = false;
             kpidx += 0.25;
 
 
         }
-        for(int _ = 0; _ < 2;){
+//        for(int _ = 0; _ < 2;){
 
             
-        }
+//        }
 //        opmode.telemetry.addData("Min Rise Time: ", minRise);
 //        opmode.telemetry.addData("Min Kp: ", minKp);
         opmode.telemetry.addData("hashTable",timetable);

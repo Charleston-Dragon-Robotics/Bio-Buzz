@@ -24,7 +24,7 @@ public class assitedTuner extends LinearOpMode {
 
         boolean Debug = true;
 
-        int VarIDX = 4;
+        int VarIDX = 0;
 
         double changeVal = 0;
 
@@ -124,7 +124,7 @@ public class assitedTuner extends LinearOpMode {
                     VarIDX = 4;
                 case 4:
                     idealKp = Launch.kpTest(idealKf, targetVelocity, maxError, Debug);
-//                    VarIDX = 5;
+                    VarIDX = 5;
                     break;
                 case 5:
                     Launch.velocity(idealKp, idealKf, targetVelocity);
