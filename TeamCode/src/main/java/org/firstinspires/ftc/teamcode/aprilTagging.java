@@ -52,7 +52,7 @@ public class aprilTagging extends LinearOpMode {
             if (processor.getDetections().size() > 0) {
                 AprilTagDetection detection = processor.getDetections().get(0);
                 telemetry.addLine("X: "+ detection.ftcPose.x);
-                telemetry.addLine("ID: " + detection.id);
+                telemetry.addLine("ID: " + detection.);
                 telemetry.update();
 
                 double derivative = detection.ftcPose.x - previous;
