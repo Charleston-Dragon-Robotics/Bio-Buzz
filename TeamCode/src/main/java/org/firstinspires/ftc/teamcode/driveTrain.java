@@ -1,17 +1,26 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.os.Debug;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class driveTrain {
 
-    //    Create motor objects here
+        //Create motor objects here
     private DcMotor FrontRM = null;
     private DcMotor FrontLM = null;
     private DcMotor BackRM = null;
     private DcMotor BackLM = null;
+
+    private DcMotorEx flyWheelM = null;
 
     private LinearOpMode opmode = null;
 
@@ -19,7 +28,7 @@ public class driveTrain {
     public driveTrain() {
     }
 
-    public void init(LinearOpMode opMode) {
+    public void init(LinearOpMode opMode, Boolean Debug) {
         HardwareMap hwMap;
 
         opmode = opMode;
@@ -48,12 +57,27 @@ public class driveTrain {
         FrontLM.setPower(0);
         BackRM.setPower(0);
         BackLM.setPower(0);
+
+        if (Debug == Boolean.TRUE){opmode.telemetry.addLine("driveTrain initalization");}
     }
 
-    public void multi(double y, double x, double yaw) {
+    public void multi(double y, double x, double yaw, Boolean Debug) {
         FrontLM.setPower(y + x + yaw);
+        if (Debug == Boolean.TRUE) {
+            opmode.telemetry.addData("FrontLM power", y + x + yaw);
+        }
         BackLM.setPower(y - x + yaw);
+        if (Debug == Boolean.TRUE) {
+            opmode.telemetry.addData("BackLM power", y - x + yaw);
+        }
         FrontRM.setPower(y - x - yaw);
+        if (Debug == Boolean.TRUE) {
+            opmode.telemetry.addData("FrontRM power", y - x - yaw);
+        }
         BackRM.setPower(y + x - yaw);
+        if (Debug == Boolean.TRUE) {
+            opmode.telemetry.addData("BackRM power", y + x - yaw);
+        }
+
     }
 }
