@@ -4,16 +4,23 @@ import android.os.Debug;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class driveTrain {
 
-    //    Create motor objects here
+        //Create motor objects here
     private DcMotor FrontRM = null;
     private DcMotor FrontLM = null;
     private DcMotor BackRM = null;
     private DcMotor BackLM = null;
+
+    private DcMotorEx flyWheelM = null;
 
     private LinearOpMode opmode = null;
 
