@@ -46,12 +46,14 @@ public class teleop extends LinearOpMode {
         Launcher Launcher = new Launcher();
         flowerServo Flow = new flowerServo();
         CRServo turnTableServo1 = null;
+        servoGate servoGate = new servoGate();
 
         // initialize subassembly classes
         Train.init(this, Debug);
         Intake.init(this);
         Launcher.init(this, Debug);
         Flow.init(this);
+        servoGate.init(this);
 
         //limelight = hardwareMap.get(Limelight3A.class, "limelight");
 //        telemetry.setMsTransmissionInterval(11);
@@ -65,7 +67,7 @@ public class teleop extends LinearOpMode {
 
         double speed = 0.5;
 
-        if (Debug == Boolean.TRUE){telemetry.addLine("Telop initalized");}
+        if (Debug == Boolean.TRUE){telemetry.addLine("Teleop initialized");}
 
         waitForStart();
 
@@ -101,8 +103,12 @@ public class teleop extends LinearOpMode {
                 Flow.setDown();
             } else if(newGamePad1.left_stick_button.state) {
                 Flow.setUp();
-            } else{
-                Flow.stop();
+            }
+            
+            if (newGamePad1.dpad_right.state) {
+                servoGate.Open();
+            }else if(newGamePad1.dpad_left.state) {
+                servoGate.Close();
             }
 
             //initialize speed as a variable
