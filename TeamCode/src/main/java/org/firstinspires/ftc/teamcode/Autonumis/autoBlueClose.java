@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Autonumis;
 
 import com.pedropathing.api.Paths;
 
@@ -13,6 +13,8 @@ import static com.pedropathing.ivy.groups.Groups.sequential;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import org.firstinspires.ftc.teamcode.Constants;
 
 @Autonomous(name = "autoBlueClose", group = "Autonomous")
 public class autoBlueClose extends LinearOpMode {
