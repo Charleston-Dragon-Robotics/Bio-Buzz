@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import java.util.Hashtable;
+
 
 public class Launcher {
 
@@ -48,7 +50,7 @@ public class Launcher {
 
         flyWheelM = (DcMotorEx) hwMap.dcMotor.get("flyWheelM");
 
-        flyWheelM.setDirection(DcMotorSimple.Direction.REVERSE);
+        flyWheelM.setDirection(DcMotorSimple.Direction.FORWARD);
 
         flyWheelM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
@@ -117,15 +119,15 @@ public class Launcher {
         return minKf;
     }
 
-    public double errorTuner(double kf, double target, boolean Debug){
-        velocity(0, kf,target);
+    public double errorTuner(double kf, double target, boolean Debug) {
+        velocity(0, kf, target);
 
-        boolean dipDetected  = false;
-        boolean idealFound   = false;
+        boolean dipDetected = false;
+        boolean idealFound = false;
         double MaxError = 0;
 
         while (!idealFound) {
-            double error =target - getV();
+            double error = target - getV();
             while (!dipDetected) {
                 error = target - getV();
 
@@ -134,9 +136,9 @@ public class Launcher {
                     dipDetected = true;
                 }
             }
-            if (MaxError < error ){
+            if (MaxError < error) {
                 MaxError = error;
-            } else if (dipDetected && MaxError > error){
+            } else if (dipDetected && MaxError > error) {
                 idealFound = true;
             }
         }
@@ -147,19 +149,21 @@ public class Launcher {
     public double kpTest(double kf, double target, double maxError, boolean Debug) {
         boolean VDip = false;
 
+        Hashtable<Double, Double> timetable = new Hashtable<Double, Double>();
+
         while (kpidx < 2) {
             double riseTime = 0;
 //            double currentV = flyWheelM.getVelocity();
             double error = target - getV();
             velocity(kpidx, kf, target);
-            opmode.telemetry.addData("target velocity: ", target );
+            opmode.telemetry.addData("target velocity: ", target);
             opmode.telemetry.addData("KpIdx: ", kpidx);
             opmode.telemetry.addData("Current Velocity: ", getV());
             opmode.telemetry.addData("Current error: ", error);
             opmode.telemetry.update();
             while (!VDip && error > 5) {
                 error = target - getV();
-                opmode.telemetry.addData("Spinning up",null);
+                opmode.telemetry.addData("Spinning up", null);
                 opmode.telemetry.update();
             }
 
@@ -178,8 +182,12 @@ public class Launcher {
                 }
             }
 
-            if(Debug){opmode.telemetry.addData("error: ", error);}
-            if(Debug){opmode.telemetry.addData("Dip detected? ", VDip);}
+            if (Debug) {
+                opmode.telemetry.addData("error: ", error);
+            }
+            if (Debug) {
+                opmode.telemetry.addData("Dip detected? ", VDip);
+            }
             opmode.telemetry.update();
 
             while (VDip && error > 0) {
@@ -194,6 +202,8 @@ public class Launcher {
             opmode.telemetry.addData("Logged rise time: ", riseTime);
             opmode.telemetry.update();
 
+            timetable.put((Double) kpidx, (Double) riseTime);
+
             if (riseTime < minRise) {
                 minRise = riseTime;
                 minKp = kpidx;
@@ -203,8 +213,13 @@ public class Launcher {
 
 
         }
-        opmode.telemetry.addData("Min Rise Time: ", minRise);
-        opmode.telemetry.addData("Min Kp: ", minKp);
+//        for(int _ = 0; _ < 2;){
+
+
+//        }
+//        opmode.telemetry.addData("Min Rise Time: ", minRise);
+//        opmode.telemetry.addData("Min Kp: ", minKp);
+        opmode.telemetry.addData("hashTable", timetable);
         opmode.telemetry.update();
         return minKp;
     }
