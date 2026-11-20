@@ -1,24 +1,18 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.app.Activity;
-import android.os.Debug;
 import android.view.View;
 
-import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.LLResultTypes;
-import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.Servo;
 //import com.bylazar.
 
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
-import org.firstinspires.ftc.teamcode.GamepadStates;
-
-import java.util.List;
+import org.firstinspires.ftc.teamcode.subassemblies.Intake;
+import org.firstinspires.ftc.teamcode.subassemblies.Launcher;
+import org.firstinspires.ftc.teamcode.subassemblies.driveTrain;
+import org.firstinspires.ftc.teamcode.subassemblies.flowerServo;
 
 // this too
 
