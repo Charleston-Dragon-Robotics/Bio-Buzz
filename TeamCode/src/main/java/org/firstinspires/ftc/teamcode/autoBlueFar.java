@@ -3,9 +3,13 @@ package org.firstinspires.ftc.teamcode;
 import static com.pedropathing.api.Paths.line;
 import static com.pedropathing.ivy.Scheduler.schedule;
 import static com.pedropathing.ivy.commands.Commands.instant;
+import static com.pedropathing.ivy.commands.Commands.waitMs;
 import static com.pedropathing.ivy.commands.Commands.waitUntil;
+import static com.pedropathing.ivy.groups.Groups.parallel;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
+
+import android.os.Debug;
 
 import com.pedropathing.api.Paths;
 import com.pedropathing.api.PoseFactory;
@@ -16,11 +20,21 @@ import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @Autonomous(name = "autoBlueFar", group = "Autonomous")
 public class autoBlueFar extends LinearOpMode {
 
+    Launcher launch = new Launcher();
+
+    flowerServo Flow = new flowerServo();
+    Intake intake = new Intake();
+
+
     private final PoseFactory poseFactory = PoseFactory.degrees();
+
+
     public final Pose startBlueFar = poseFactory.of(83.5188, 133.5213, -90);
     private final Pose launchFlower = poseFactory.of(135.5383, 94.766, 0);
     private final Pose flowerLaunchStart = poseFactory.of(135.5383, 94.766, 0);
@@ -54,12 +68,22 @@ public class autoBlueFar extends LinearOpMode {
         return Paths.line(launchParkStart, launchPark).linear(launchParkStart, launchPark);
     }
 
+
     public Command autoBlueFar() {
         return sequential(
+                instant(() -> launch.hiveLaunch(true)),
                 follow(follower, launchToFlowerABFar()),
+                instant(() -> Flow.setDown()),
+                instant(() -> intake.fullPower()),
                 follow(follower, flowerToLaunch()),
+                instant(() -> launch.hiveLaunch(true)),
+                instant(() -> Flow.setUp()),
+                instant(() -> intake.stop()),
                 follow(follower, launchToFlower2()),
+                instant(() -> Flow.setDown()),
+                instant(() -> intake.fullPower()),
                 follow(follower, flowerToLaunch2()),
+                instant(() -> intake.stop()),
                 follow(follower, launchToPark())
         );
     }
@@ -69,15 +93,24 @@ public class autoBlueFar extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        launch.init(this, false);
+        Flow.init(this);
+        intake.init(this);
+
         Scheduler.reset();
 
-        follower = Constants.create(hardwareMap);
-        follower.setPose(startBlueFar);
-        schedule(follow(follower, launchToFlowerABFar()));
-        schedule(follow(follower, flowerToLaunch()));
-        schedule(follow(follower, launchToFlower2()));
-        schedule(follow(follower, flowerToLaunch2()));
-        schedule(follow(follower, launchToPark()));
+//        follower = Constants.create(hardwareMap);
+//        follower.setPose(startBlueFar);
+//        instant(() -> launch.hiveLaunch(true));
+//        schedule(follow(follower, launchToFlowerABFar()));
+//        instant(() -> Flow.setDown());
+//        schedule(follow(follower, flowerToLaunch()));
+//        instant(() -> Flow.setUp());
+//        instant(() -> launch.hiveLaunch(true));
+//        schedule(follow(follower, launchToFlower2()));
+//        schedule(follow(follower, flowerToLaunch2()));
+//        instant(() -> launch.hiveLaunch(true));
+//        schedule(follow(follower, launchToPark()));
 
         schedule(autoBlueFar());
 

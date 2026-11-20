@@ -384,7 +384,7 @@ public class Launcher {
     }
     public void turnTableRotation(double power, boolean Debug) {
         turnTableServo1.setPower(power);
-        turnTableServo2.setPower(power);
+        turnTableServo2.setPower(   power);
         if (Debug) {
             opmode.telemetry.addData("turnTableServo power", power);
         }

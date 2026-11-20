@@ -10,7 +10,9 @@ import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 //import com.bylazar.
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
@@ -27,6 +29,7 @@ public class teleop extends LinearOpMode {
 
     View relativeLayout;
 
+
     private Limelight3A limelight;
 
     @Override
@@ -39,9 +42,16 @@ public class teleop extends LinearOpMode {
 
         // declare subassembly classes
         driveTrain Train = new driveTrain();
+        Intake Intake = new Intake();
+        Launcher Launcher = new Launcher();
+        flowerServo Flow = new flowerServo();
+        CRServo turnTableServo1 = null;
 
         // initialize subassembly classes
         Train.init(this, Debug);
+        Intake.init(this);
+        Launcher.init(this, Debug);
+        Flow.init(this);
 
         //limelight = hardwareMap.get(Limelight3A.class, "limelight");
 //        telemetry.setMsTransmissionInterval(11);
@@ -71,11 +81,29 @@ public class teleop extends LinearOpMode {
                 Train.multi(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, Debug);
             }
 
+            if(newGamePad1.dpad_up.state) {
+                Intake.control(0.75);
+            } else if (newGamePad1.dpad_down.state) {
+                Intake.control(-0.75);
+            } else {
+                Intake.stop();
+            }
 
-//            LL.detectPattern();
+            if(newGamePad1.left_bumper.state) {
+                Launcher.turnTableRotation(-1, true);
+            } else if(newGamePad1.right_bumper.state) {
+                Launcher.turnTableRotation(1, true);
+            } else{
+                Launcher.turnTableRotation(0, true);
+            }
 
-            // controls movement
-
+            if (newGamePad1.guide.state) {
+                Flow.setDown();
+            } else if(newGamePad1.left_stick_button.state) {
+                Flow.setUp();
+            } else{
+                Flow.stop();
+            }
 
             //initialize speed as a variable
             telemetry.addData("Speed: ", speed);

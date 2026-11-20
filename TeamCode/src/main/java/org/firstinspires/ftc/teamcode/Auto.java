@@ -30,7 +30,7 @@ public class Auto extends LinearOpMode {
 
         autoBlueFar ABFar = new autoBlueFar();
 
-        telemetry.addLine("press X for blue, press B for red 'w'");
+        telemetry.addLine("press X for blue, press B for red");
         telemetry.update();
 
         while (!colorSelected) {
@@ -91,11 +91,11 @@ public class Auto extends LinearOpMode {
                 Scheduler.reset();
                 follower = Constants.create(hardwareMap);
                 follower.setPose(ABFar.startBlueFar);
-                schedule(follow(follower, ABFar.launchToFlowerABFar()));
-                schedule(follow(follower, ABFar.flowerToLaunch()));
-                schedule(follow(follower, ABFar.launchToFlower2()));
-                schedule(follow(follower, ABFar.flowerToLaunch2()));
-                schedule(follow(follower, ABFar.launchToPark()));
+//                schedule(follow(follower, ABFar.launchToFlowerABFar()));
+//                schedule(follow(follower, ABFar.flowerToLaunch()));
+//                schedule(follow(follower, ABFar.launchToFlower2()));
+//                schedule(follow(follower, ABFar.flowerToLaunch2()));
+//                schedule(follow(follower, ABFar.launchToPark()));
 
                 schedule(ABFar.autoBlueFar());
 
