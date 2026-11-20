@@ -27,7 +27,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class autoBlueFar extends LinearOpMode {
 
     Launcher launch = new Launcher();
-
     flowerServo Flow = new flowerServo();
     Intake intake = new Intake();
 

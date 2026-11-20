@@ -18,17 +18,22 @@ public class servoGate {
 
         servoGate = hwMap.servo.get("servoGate");
 
-        servoGate.setPosition(0.5);
+        servoGate.setPosition(0.3);
 
 
     }
 
     public boolean Close() {
-        servoGate.setPosition(1);
+        servoGate.setPosition(0.8);
         return true;
     }
     public boolean Open() {
-        servoGate.setPosition(0.5);
+        servoGate.setPosition(0.3);
         return true;
+        
+    }
+
+
+
     }
 }

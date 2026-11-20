@@ -104,7 +104,7 @@ public class teleop extends LinearOpMode {
             } else if(newGamePad1.left_stick_button.state) {
                 Flow.setUp();
             }
-            
+
             if (newGamePad1.dpad_right.state) {
                 servoGate.Open();
             }else if(newGamePad1.dpad_left.state) {
