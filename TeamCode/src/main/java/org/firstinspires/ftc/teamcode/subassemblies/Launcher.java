@@ -324,13 +324,14 @@ public class Launcher {
         if (Debug) {
             opmode.telemetry.addData("turnTableMotor power", pos);
         }
-    } public void turnTableChangePos(double posChange, boolean Debug) {
+    }
+
+    public void turnTableChangePos(double posChange, boolean Debug) {
 
         turnTableM.setPower(posChange);
         if (Debug) {
             opmode.telemetry.addData("turnTableServo posChange", posChange);
         }
     }
-
 
 }
