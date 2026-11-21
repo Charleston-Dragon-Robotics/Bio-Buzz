@@ -59,7 +59,7 @@ public class flyWheelTest extends LinearOpMode {
 //                currentLaunchMode = "flower";
 //            }
 //            Launch.launchControl(currentLaunchMode, Debug);
-//            Launch.turnTableRotation(gamepad1.left_stick_x,Debug);
+//            Launch.turnTablePower(gamepad1.left_stick_x,Debug);
 
             telemetry.update();
         }

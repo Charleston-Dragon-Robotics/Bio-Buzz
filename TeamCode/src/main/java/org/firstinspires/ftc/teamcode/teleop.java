@@ -75,28 +75,26 @@ public class teleop extends LinearOpMode {
                 Train.multi(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, Debug);
             }
 
-            if(newGamePad1.dpad_up.state) {
+            if(newGamePad2.left_bumper.state) {
                 Intake.control(0.75);
-            } else if (newGamePad1.dpad_down.state) {
+            } else if (newGamePad2.right_bumper.state) {
                 Intake.control(-0.75);
             } else {
                 Intake.stop();
             }
 
-            if(newGamePad1.left_bumper.state) {
-                Launcher.turnTableRotation(-1, true);
-            } else if(newGamePad1.right_bumper.state) {
-                Launcher.turnTableRotation(1, true);
+            if(newGamePad2.dpad_left.released) {
+                Launcher.turnTablePower(-1, true);
+            } else if(newGamePad2.dpad_right.released) {
+                Launcher.turnTablePower(1, true);
             } else{
-                Launcher.turnTableRotation(0, true);
+                Launcher.turnTablePower(0, true);
             }
 
-            if (newGamePad1.guide.state) {
+            if (newGamePad2.dpad_down.released) {
                 Flow.setDown();
-            } else if(newGamePad1.left_stick_button.state) {
+            } else if(newGamePad2.dpad_up.released) {
                 Flow.setUp();
-            } else{
-                Flow.stop();
             }
 
             //initialize speed as a variable
