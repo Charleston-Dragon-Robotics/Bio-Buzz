@@ -1,14 +1,24 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.app.Activity;
+import android.os.Debug;
 import android.view.View;
 
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
+import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 //import com.bylazar.
+import org.firstinspires.ftc.teamcode.subassemblies.*;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+import org.firstinspires.ftc.teamcode.GamepadStates;
 
+import java.util.List;
 
 // this too
 
@@ -36,14 +46,14 @@ public class teleop extends LinearOpMode {
         Launcher Launcher = new Launcher();
         flowerServo Flow = new flowerServo();
         CRServo turnTableServo1 = null;
-        servoGate servoGate = new servoGate();
+        servoGate Gate = new servoGate();
 
         // initialize subassembly classes
         Train.init(this, Debug);
         Intake.init(this);
         Launcher.init(this, Debug);
         Flow.init(this);
-        servoGate.init(this);
+        Gate.init(this);
 
         //limelight = hardwareMap.get(Limelight3A.class, "limelight");
 //        telemetry.setMsTransmissionInterval(11);
@@ -57,7 +67,9 @@ public class teleop extends LinearOpMode {
 
         double speed = 0.5;
 
-        if (Debug == Boolean.TRUE){telemetry.addLine("Teleop initialized");}
+        if (Debug == Boolean.TRUE) {
+            telemetry.addLine("Telop initalized");
+        }
 
         waitForStart();
 
@@ -67,43 +79,51 @@ public class teleop extends LinearOpMode {
             newGamePad2.updateState();
 
 
-            if(newGamePad1.left_trigger.state) {
-                Train.multi(-gamepad1.left_stick_y/2, gamepad1.left_stick_x/2, gamepad1.right_stick_x/2, Debug);
+            if (newGamePad1.left_trigger.state) {
+                Train.multi(-gamepad1.left_stick_y / 2, gamepad1.left_stick_x / 2, gamepad1.right_stick_x / 2, Debug);
             } else {
                 Train.multi(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, Debug);
             }
 
-            if(newGamePad2.dpad_up.state) {
-                Intake.control(0.75);
+            if (newGamePad2.dpad_up.state) {
+                Intake.control(1);
             } else if (newGamePad2.dpad_down.state) {
-                Intake.control(-0.75);
+                Intake.control(-1);
             } else {
                 Intake.stop();
             }
 
-            if(newGamePad2.left_bumper.state) {
-                Launcher.turnTableRotation(-1, true);
-            } else if(newGamePad2.right_bumper.state) {
-                Launcher.turnTableRotation(1, true);
-            } else{
-                Launcher.turnTableRotation(0, true);
-            }
+            if (newGamePad2.left_bumper.state) {
+                Launcher.turnTablePower(-1, true);
+            } else if (newGamePad2.right_bumper.state) {
+                Launcher.turnTablePower(1, true);
+                if (newGamePad2.dpad_left.released) {
+                    Launcher.turnTablePower(-1, true);
+                } else if (newGamePad2.dpad_right.released) {
+                    Launcher.turnTablePower(1, true);
+                } else {
+                    Launcher.turnTablePower(0, true);
+                }
 
-            if (newGamePad2.guide.state) {
-                Flow.setDown();
-            } else if(newGamePad2.left_stick_button.state) {
-                Flow.setUp();
-            }
+                if (newGamePad2.guide.state) {
+                    if (newGamePad2.dpad_down.released) {
+                        Flow.setDown();
+                    } else if (newGamePad2.left_stick_button.state) {
+                    } else if (newGamePad2.dpad_up.released) {
+                        Flow.setUp();
+                    }
 
-            if (newGamePad2.dpad_right.state) {
-                servoGate.Active();
-            }else if(newGamePad2.dpad_left.state) {
-                servoGate.Hold();
-            }
+                    if (newGamePad2.dpad_right.state) {
+                        Gate.Active();
+                    } else if (newGamePad2.dpad_left.state) {
+                        Gate.Hold();
+                    }
 
-            //initialize speed as a variable
-            telemetry.addData("Speed: ", speed);
-            telemetry.update();
+                    //initialize speed as a variable
+                    telemetry.addData("Speed: ", speed);
+                    telemetry.update();
+                }
+            }
         }
     }
 }

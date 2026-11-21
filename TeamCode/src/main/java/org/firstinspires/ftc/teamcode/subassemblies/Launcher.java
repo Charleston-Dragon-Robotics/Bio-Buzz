@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.subassemblies;
+
+import android.os.Debug;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -18,8 +19,7 @@ public class Launcher {
     private static ElapsedTime stopwatch = new ElapsedTime();
 
     private DcMotorEx flyWheelM = null;
-    private CRServo turnTableServo1 = null;
-    private CRServo turnTableServo2 = null;
+    private DcMotorEx turnTableM = null;
 
     private LinearOpMode opmode = null;
 
@@ -58,22 +58,19 @@ public class Launcher {
 
         flyWheelM.setPower(0);
 
-        turnTableServo1 = hwMap.crservo.get("turnTableServo1");
-        turnTableServo2 = hwMap.crservo.get("turnTableServo2");
+        turnTableM = (DcMotorEx) hwMap.dcMotor.get("turnTableM");
+
+        turnTableM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        turnTableM.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        turnTableM.setPower(0);
 
 
         if (Debug) {
             opMode.telemetry.addLine("Launcher init complete");
         }
 
-    }
-
-    public void setZeroToFloat() {
-        flyWheelM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-    }
-
-    public void setZeroToBrake() {
-        flyWheelM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public double velocityTest(boolean Debug) {
@@ -99,7 +96,7 @@ public class Launcher {
         while (kfidx < (2 * kf / 3)) {
             double currentV = flyWheelM.getVelocity();
             double error = target - currentV;
-            velocity(0, kfidx, target);
+            velocity(0, kfidx, target, Debug);
             opmode.telemetry.addData("set velocity: ", target + kfidx * error);
             opmode.telemetry.addData("KfIdx: ", kfidx);
             opmode.telemetry.addData("Current Velocity: ", currentV);
@@ -120,7 +117,7 @@ public class Launcher {
     }
 
     public double errorTuner(double kf, double target, boolean Debug) {
-        velocity(0, kf, target);
+        velocity(0, kf, target, Debug);
 
         boolean dipDetected = false;
         boolean idealFound = false;
@@ -155,7 +152,7 @@ public class Launcher {
             double riseTime = 0;
 //            double currentV = flyWheelM.getVelocity();
             double error = target - getV();
-            velocity(kpidx, kf, target);
+            velocity(kpidx, kf, target, Debug);
             opmode.telemetry.addData("target velocity: ", target);
             opmode.telemetry.addData("KpIdx: ", kpidx);
             opmode.telemetry.addData("Current Velocity: ", getV());
@@ -168,7 +165,7 @@ public class Launcher {
             }
 
             while (!VDip) {
-                velocity(kpidx, kf, target);
+                velocity(kpidx, kf, target, Debug);
                 error = target - getV();
                 opmode.telemetry.addData("Error: ", error);
                 opmode.telemetry.addData("Waiting for dip...", null);
@@ -287,93 +284,19 @@ public class Launcher {
 
     }
 
-    public void velocity(double kp, double kf, double target) {
+    public void velocity(double kp, double kf, double target, boolean Debug) {
         PIDFCoefficients pidfCoefficients = new PIDFCoefficients(kp, 0, 0, kf);
+        flyWheelM.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
+        opmode.telemetry.addData("kp", kp);
+        opmode.telemetry.addData("kf", kf);
+        opmode.telemetry.addData("target ", target);
         flyWheelM.setVelocity(target);
     }
 
-    public void hiveLaunch(boolean Debug) {
-        //tuningTest(1700,11.7,0,0, 0.5);
-        int targetVelocity = 1700;
-        if (Debug) {
-            opmode.telemetry.addData("    --hiveLaunch-- Target launch velocity", targetVelocity);
-        }
-        double kf = 11.7;
-        if (Debug) {
-            opmode.telemetry.addData("    --hiveLaunch-- kf tuner", kf);
-        }
-        double kp = 0;
-        if (Debug) {
-            opmode.telemetry.addData("    --hiveLaunch-- kp tuner", kp);
-        }
-        double ki = 0;
-        if (Debug) {
-            opmode.telemetry.addData("    --hiveLaunch-- ki tuner", ki);
-        }
-        double kd = 0.5;
-        if (Debug) {
-            opmode.telemetry.addData("    --hiveLaunch-- kd tuner", kd);
-        }
-        double current = flyWheelM.getVelocity();
-        if (Debug) {
-            opmode.telemetry.addData("    --hiveLaunch-- Current launcher velocity", current);
-        }
-        double error = targetVelocity - current;
-        if (Debug) {
-            opmode.telemetry.addData("    --hiveLaunch-- error from target velocity", error);
-        }
-        flyWheelM.setVelocity((error * kf) + (error * kp) + (error * ki) + (error * kd));
+    public void PHiveLaunch() {
+
     }
 
-    public void flowerLaunch(boolean Debug) {
-        tuningTest(950, 11.7, 0, 0, 0.5);
-        int targetVelocity = 950;
-        if (Debug) {
-            opmode.telemetry.addData("    --flowerLaunch-- Target launch velocity", targetVelocity);
-        }
-        double kf = 11.7;
-        if (Debug) {
-            opmode.telemetry.addData("    --flowerLaunch-- kf tuner", kf);
-        }
-        double kp = 0;
-        if (Debug) {
-            opmode.telemetry.addData("    --flowerLaunch-- kp tuner", kp);
-        }
-        double ki = 0;
-        if (Debug) {
-            opmode.telemetry.addData("    --flowerLaunch-- ki tuner", ki);
-        }
-        double kd = 0.5;
-        if (Debug) {
-            opmode.telemetry.addData("    --flowerLaunch-- kd tuner", kd);
-        }
-        double current = flyWheelM.getVelocity();
-        if (Debug) {
-            opmode.telemetry.addData("    --flowerLaunch-- Current launcher velocity", current);
-        }
-        double error = targetVelocity - current;
-        if (Debug) {
-            opmode.telemetry.addData("    --flowerLaunch-- error from target velocity", error);
-        }
-        flyWheelM.setVelocity((error * kf) + (error * kp) + (error * ki) + (error * kd));
-    }
-
-    public void launchControl(String launchMode, boolean Debug) {
-
-        String newLaunchMode = launchMode.toLowerCase();
-
-        switch (newLaunchMode) {
-            case "hive":
-                hiveLaunch(Debug);
-                opmode.telemetry.addLine("Launch mode hive");
-
-                break;
-            case "flower":
-                flowerLaunch(Debug);
-                opmode.telemetry.addLine("Launch mode hive");
-
-        }
-    }
 
     public void set(double Velocity) {
         flyWheelM.setVelocity(Velocity);
@@ -382,11 +305,29 @@ public class Launcher {
     public void stop() {
         flyWheelM.setPower(0);
     }
-    public void turnTableRotation(double power, boolean Debug) {
-        turnTableServo1.setPower(power);
-        turnTableServo2.setPower(   power);
+
+    public void turnTablePower(double power, boolean Debug) {
+
+        turnTableM.setPower(power);
         if (Debug) {
             opmode.telemetry.addData("turnTableServo power", power);
         }
     }
+
+    public void turnTableSetPos(double pos, boolean Debug) {
+
+        turnTableM.setPower(pos);
+        if (Debug) {
+            opmode.telemetry.addData("turnTableMotor power", pos);
+        }
+    }
+
+    public void turnTableChangePos(double posChange, boolean Debug) {
+
+        turnTableM.setPower(posChange);
+        if (Debug) {
+            opmode.telemetry.addData("turnTableServo posChange", posChange);
+        }
+    }
+
 }

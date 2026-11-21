@@ -1,7 +1,10 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.MFD;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.teamcode.GamepadStates;
+import org.firstinspires.ftc.teamcode.subassemblies.Launcher;
 
 
 @TeleOp(name = "flyWheelTest", group = "Teleop")
@@ -56,7 +59,7 @@ public class flyWheelTest extends LinearOpMode {
 //                currentLaunchMode = "flower";
 //            }
 //            Launch.launchControl(currentLaunchMode, Debug);
-//            Launch.turnTableRotation(gamepad1.left_stick_x,Debug);
+//            Launch.turnTablePower(gamepad1.left_stick_x,Debug);
 
             telemetry.update();
         }

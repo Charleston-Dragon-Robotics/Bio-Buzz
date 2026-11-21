@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.subassemblies;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -88,7 +88,7 @@ public class assitedTuner extends LinearOpMode {
                     VarIDX = 2;
                     break;
                 case 2:
-                    Launch.velocity(0, idealKf, targetVelocity);
+                    Launch.velocity(0, idealKf, targetVelocity, Debug);
                     if (newGamePad1.dpad_left.released && targetVelocity >= 100) {
                         targetVelocity -= 100;
                     } else if (newGamePad1.dpad_right.released && targetVelocity <= (maxVelocity - 100)) {
@@ -127,8 +127,15 @@ public class assitedTuner extends LinearOpMode {
                     VarIDX = 5;
                     break;
                 case 5:
-                    Launch.velocity(idealKp, idealKf, targetVelocity);
+                    Launch.velocity(idealKp, idealKf, targetVelocity, Debug);
+                    if (newGamePad1.a.released){
+                        VarIDX = 6;
+                    }
                     break;
+                case 6:
+                    telemetry.addData("ideal Kp", idealKp);
+                    telemetry.addData("ideal Kf", idealKf);
+                    telemetry.addData("target velocity", targetVelocity);
 
             }
 

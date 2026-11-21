@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.subassemblies;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class servoGate {
     private Servo servoGate = null;
     private LinearOpMode opmode = null;
-    private RGBLight rgbLight = null;
+//    private RGBLight rgbLight = null;
 
     public servoGate() {
     }
@@ -27,13 +27,13 @@ public class servoGate {
 
     public boolean Hold() {
         servoGate.setPosition(0.8);
-        rgbLight.red();
+//        rgbLight.red();
         return true;
     }
 
     public boolean Active() {
         servoGate.setPosition(0.3);
-        rgbLight.green();
+//        rgbLight.green();
         return true;
     }
 

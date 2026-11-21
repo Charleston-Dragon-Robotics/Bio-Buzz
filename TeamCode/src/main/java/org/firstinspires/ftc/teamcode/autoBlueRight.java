@@ -18,6 +18,12 @@ import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+
+import org.firstinspires.ftc.teamcode.subassemblies.Intake;
+import org.firstinspires.ftc.teamcode.subassemblies.Launcher;
+import org.firstinspires.ftc.teamcode.subassemblies.flowerServo;
+import org.firstinspires.ftc.teamcode.subassemblies.servoGate;
+
 @Autonomous(name = "autoBlueFar", group = "Autonomous")
 public class autoBlueRight extends LinearOpMode {
 
@@ -67,7 +73,7 @@ public class autoBlueRight extends LinearOpMode {
     public Command autoBlueRight() {
         return sequential(
                 instant(() -> servoGate.Active()),
-                instant(() -> launch.hiveLaunch(true)),
+                instant(() -> launch.PHiveLaunch()),
                 instant(() -> servoGate.Hold()),
                 parallel(
                         follow(follower, launchToFlowerABFar()),
@@ -75,8 +81,7 @@ public class autoBlueRight extends LinearOpMode {
                         instant(() -> Flow.setDown()),
                         instant(() -> intake.fullPower())),
                 follow(follower, flowerToLaunch()),
-                instant(()
-                instant(() -> launch.hiveLaunch(true)),
+                instant(() -> launch.PHiveLaunch()),
                 instant(() -> Flow.setUp()),
                 instant(() -> intake.stop()),
                 follow(follower, launchToFlower2()),
