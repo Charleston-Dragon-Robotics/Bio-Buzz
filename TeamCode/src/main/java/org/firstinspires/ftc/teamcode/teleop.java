@@ -73,31 +73,31 @@ public class teleop extends LinearOpMode {
                 Train.multi(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, Debug);
             }
 
-            if(newGamePad1.dpad_up.state) {
+            if(newGamePad2.dpad_up.state) {
                 Intake.control(0.75);
-            } else if (newGamePad1.dpad_down.state) {
+            } else if (newGamePad2.dpad_down.state) {
                 Intake.control(-0.75);
             } else {
                 Intake.stop();
             }
 
-            if(newGamePad1.left_bumper.state) {
+            if(newGamePad2.left_bumper.state) {
                 Launcher.turnTableRotation(-1, true);
-            } else if(newGamePad1.right_bumper.state) {
+            } else if(newGamePad2.right_bumper.state) {
                 Launcher.turnTableRotation(1, true);
             } else{
                 Launcher.turnTableRotation(0, true);
             }
 
-            if (newGamePad1.guide.state) {
+            if (newGamePad2.guide.state) {
                 Flow.setDown();
-            } else if(newGamePad1.left_stick_button.state) {
+            } else if(newGamePad2.left_stick_button.state) {
                 Flow.setUp();
             }
 
-            if (newGamePad1.dpad_right.state) {
+            if (newGamePad2.dpad_right.state) {
                 servoGate.Active();
-            }else if(newGamePad1.dpad_left.state) {
+            }else if(newGamePad2.dpad_left.state) {
                 servoGate.Hold();
             }
 

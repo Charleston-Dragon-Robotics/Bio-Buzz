@@ -33,6 +33,7 @@ public class Intake {
     }
     public void control(double power){
         IntakeM.setPower(power);
+        opmode.telemetry.addData("IntakeM", power);
     }
     public void fullReverse(){
         IntakeM.setPower(-1);

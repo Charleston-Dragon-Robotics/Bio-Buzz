@@ -66,14 +66,16 @@ public class autoBlueRight extends LinearOpMode {
 
     public Command autoBlueRight() {
         return sequential(
-                instant(() -> servoGate.Active()));
+                instant(() -> servoGate.Active()),
                 instant(() -> launch.hiveLaunch(true)),
-                follow(follower, launchToFlowerABFar()),
+                instant(() -> servoGate.Hold()),
                 parallel(
-                instant(() -> Flow.setDown()),
-                instant(() -> intake.fullPower()),
-                follow(follower, flowerToLaunch())),
-                waitMs(3000),
+                        follow(follower, launchToFlowerABFar()),
+                        waitMs(1000),
+                        instant(() -> Flow.setDown()),
+                        instant(() -> intake.fullPower())),
+                follow(follower, flowerToLaunch()),
+                instant(()
                 instant(() -> launch.hiveLaunch(true)),
                 instant(() -> Flow.setUp()),
                 instant(() -> intake.stop()),
