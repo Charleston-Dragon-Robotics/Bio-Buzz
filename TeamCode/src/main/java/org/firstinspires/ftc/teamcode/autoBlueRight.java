@@ -4,12 +4,9 @@ import static com.pedropathing.api.Paths.line;
 import static com.pedropathing.ivy.Scheduler.schedule;
 import static com.pedropathing.ivy.commands.Commands.instant;
 import static com.pedropathing.ivy.commands.Commands.waitMs;
-import static com.pedropathing.ivy.commands.Commands.waitUntil;
 import static com.pedropathing.ivy.groups.Groups.parallel;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
-
-import android.os.Debug;
 
 import com.pedropathing.api.Paths;
 import com.pedropathing.api.PoseFactory;
@@ -20,21 +17,20 @@ import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @Autonomous(name = "autoBlueFar", group = "Autonomous")
-public class autoBlueFar extends LinearOpMode {
+public class autoBlueRight extends LinearOpMode {
 
     Launcher launch = new Launcher();
     flowerServo Flow = new flowerServo();
     Intake intake = new Intake();
+    servoGate servoGate = new servoGate();
 
 
     private final PoseFactory poseFactory = PoseFactory.degrees();
 
 
-    public final Pose startBlueFar = poseFactory.of(83.5188, 133.5213, -90);
+    public final Pose startBlueRight = poseFactory.of(83.5188, 133.5213, -90);
     private final Pose launchFlower = poseFactory.of(135.5383, 94.766, 0);
     private final Pose flowerLaunchStart = poseFactory.of(135.5383, 94.766, 0);
     private final Pose flowerLaunch = poseFactory.of(84.6532, 22.3029, 90);
@@ -48,7 +44,7 @@ public class autoBlueFar extends LinearOpMode {
 
 
     public Path launchToFlowerABFar() {
-        return Paths.line(startBlueFar, launchFlower).linear(startBlueFar, launchFlower);
+        return Paths.line(startBlueRight, launchFlower).linear(startBlueRight, launchFlower);
     }
 
     public Path flowerToLaunch() {
@@ -68,13 +64,16 @@ public class autoBlueFar extends LinearOpMode {
     }
 
 
-    public Command autoBlueFar() {
+    public Command autoBlueRight() {
         return sequential(
+                instant(() -> servoGate.Active()));
                 instant(() -> launch.hiveLaunch(true)),
                 follow(follower, launchToFlowerABFar()),
+                parallel(
                 instant(() -> Flow.setDown()),
                 instant(() -> intake.fullPower()),
-                follow(follower, flowerToLaunch()),
+                follow(follower, flowerToLaunch())),
+                waitMs(3000),
                 instant(() -> launch.hiveLaunch(true)),
                 instant(() -> Flow.setUp()),
                 instant(() -> intake.stop()),
@@ -95,6 +94,7 @@ public class autoBlueFar extends LinearOpMode {
         launch.init(this, false);
         Flow.init(this);
         intake.init(this);
+        servoGate.init(this);
 
         Scheduler.reset();
 
@@ -111,7 +111,7 @@ public class autoBlueFar extends LinearOpMode {
 //        instant(() -> launch.hiveLaunch(true));
 //        schedule(follow(follower, launchToPark()));
 
-        schedule(autoBlueFar());
+        schedule(autoBlueRight());
 
         waitForStart();
 

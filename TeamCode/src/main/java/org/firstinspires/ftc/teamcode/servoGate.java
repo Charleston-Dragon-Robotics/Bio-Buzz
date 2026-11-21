@@ -7,9 +7,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class servoGate {
     private Servo servoGate = null;
     private LinearOpMode opmode = null;
+    private RGBLight rgbLight = null;
 
     public servoGate() {
     }
+
     public void init(LinearOpMode opMode) {
         HardwareMap hwMap;
 
@@ -18,22 +20,23 @@ public class servoGate {
 
         servoGate = hwMap.servo.get("servoGate");
 
-        servoGate.setPosition(0.3);
-
-
-    }
-
-    public boolean Close() {
         servoGate.setPosition(0.8);
+
+
+    }
+
+    public boolean Hold() {
+        servoGate.setPosition(0.8);
+        rgbLight.red();
         return true;
     }
-    public boolean Open() {
+
+    public boolean Active() {
         servoGate.setPosition(0.3);
+        rgbLight.green();
         return true;
-        
     }
 
 
-
-    }
 }
+
