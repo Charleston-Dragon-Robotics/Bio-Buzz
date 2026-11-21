@@ -19,7 +19,7 @@ public class Launcher {
     private static ElapsedTime stopwatch = new ElapsedTime();
 
     private DcMotorEx flyWheelM = null;
-    private DcMotorEx turnTableM = null;
+//    private DcMotor turnTableM = null;
 
     private LinearOpMode opmode = null;
 
@@ -58,13 +58,16 @@ public class Launcher {
 
         flyWheelM.setPower(0);
 
-        turnTableM = (DcMotorEx) hwMap.dcMotor.get("turnTableM");
-
-        turnTableM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        turnTableM.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        turnTableM.setPower(0);
+//        turnTableM =  hwMap.dcMotor.get("turnTableM");
+//
+//        turnTableM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//
+//        turnTableM.setTargetPosition(0);
+//
+//        turnTableM.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//
+//        turnTableM.setPower(0);
 
 
         if (Debug) {
@@ -306,28 +309,28 @@ public class Launcher {
         flyWheelM.setPower(0);
     }
 
-    public void turnTablePower(double power, boolean Debug) {
-
-        turnTableM.setPower(power);
-        if (Debug) {
-            opmode.telemetry.addData("turnTableServo power", power);
-        }
-    }
-
-    public void turnTableSetPos(double pos, boolean Debug) {
-
-        turnTableM.setPower(pos);
-        if (Debug) {
-            opmode.telemetry.addData("turnTableMotor power", pos);
-        }
-    }
-
-    public void turnTableChangePos(double posChange, boolean Debug) {
-
-        turnTableM.setPower(posChange);
-        if (Debug) {
-            opmode.telemetry.addData("turnTableServo posChange", posChange);
-        }
-    }
+//    public void turnTablePower(double power, boolean Debug) {
+//
+//        turnTableM.setPower(power);
+//        if (Debug) {
+//            opmode.telemetry.addData("turnTableServo power", power);
+//        }
+//    }
+//
+//    public void turnTableSetPos(double pos, boolean Debug) {
+//
+//        turnTableM.setPower(pos);
+//        if (Debug) {
+//            opmode.telemetry.addData("turnTableMotor power", pos);
+//        }
+//    }
+//
+//    public void turnTableChangePos(double posChange, boolean Debug) {
+//
+//        turnTableM.setPower(posChange);
+//        if (Debug) {
+//            opmode.telemetry.addData("turnTableServo posChange", posChange);
+//        }
+//    }
 
 }

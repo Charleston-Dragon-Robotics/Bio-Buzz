@@ -45,7 +45,7 @@ public class teleop extends LinearOpMode {
         Intake Intake = new Intake();
         Launcher Launcher = new Launcher();
         flowerServo Flow = new flowerServo();
-        CRServo turnTableServo1 = null;
+//        CRServo turnTableServo1 = null;
         servoGate Gate = new servoGate();
 
         // initialize subassembly classes
@@ -75,6 +75,9 @@ public class teleop extends LinearOpMode {
 
         while (opModeIsActive()) {
 
+
+//            Gate.servoGate.setPosition(.3);
+
             newGamePad1.updateState();
             newGamePad2.updateState();
 
@@ -93,37 +96,40 @@ public class teleop extends LinearOpMode {
                 Intake.stop();
             }
 
-            if (newGamePad2.left_bumper.state) {
-                Launcher.turnTablePower(-1, true);
-            } else if (newGamePad2.right_bumper.state) {
-                Launcher.turnTablePower(1, true);
-                if (newGamePad2.dpad_left.released) {
-                    Launcher.turnTablePower(-1, true);
-                } else if (newGamePad2.dpad_right.released) {
-                    Launcher.turnTablePower(1, true);
-                } else {
-                    Launcher.turnTablePower(0, true);
+//            if (newGamePad2.left_bumper.state) {
+//                Launcher.turnTablePower(-1, true);
+//            } else if (newGamePad2.right_bumper.state) {
+//                Launcher.turnTablePower(1, true);
+//                if (newGamePad2.dpad_left.released) {
+//                    Launcher.turnTablePower(-1, true);
+//                } else if (newGamePad2.dpad_right.released) {
+//                    Launcher.turnTablePower(1, true);
+//                } else {
+//                    Launcher.turnTablePower(0, true);
+//                }
+
+//            if (newGamePad2.guide.state) {
+//                if (newGamePad2.dpad_down.released) {
+//                    Flow.setDown();
+//                } else if (newGamePad2.left_stick_button.state) {
+//                } else if (newGamePad2.dpad_up.released) {
+//                    Flow.setUp();
+//                }
+//            }
+
+                if (newGamePad2.b.released) {
+                    telemetry.addLine("right trigger");
+
+                    Gate.Hold();
+
+                } else if (newGamePad2.a.released) {
+                    telemetry.addLine("left trigger");
+                    Gate.Active();
                 }
 
-                if (newGamePad2.guide.state) {
-                    if (newGamePad2.dpad_down.released) {
-                        Flow.setDown();
-                    } else if (newGamePad2.left_stick_button.state) {
-                    } else if (newGamePad2.dpad_up.released) {
-                        Flow.setUp();
-                    }
-
-                    if (newGamePad2.dpad_right.state) {
-                        Gate.Active();
-                    } else if (newGamePad2.dpad_left.state) {
-                        Gate.Hold();
-                    }
-
-                    //initialize speed as a variable
-                    telemetry.addData("Speed: ", speed);
-                    telemetry.update();
-                }
-            }
+                //initialize speed as a variable
+                telemetry.addData("Speed: ", speed);
+                telemetry.update();
         }
     }
 }

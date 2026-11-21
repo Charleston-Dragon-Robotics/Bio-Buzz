@@ -39,8 +39,8 @@ public class driveTrain {
         // directions!!!
         FrontLM.setDirection(DcMotorSimple.Direction.REVERSE);
         FrontRM.setDirection(DcMotorSimple.Direction.FORWARD);
-        BackLM.setDirection(DcMotorSimple.Direction.FORWARD);
-        BackRM.setDirection(DcMotorSimple.Direction.REVERSE);
+        BackLM.setDirection(DcMotorSimple.Direction.REVERSE);
+        BackRM.setDirection(DcMotorSimple.Direction.FORWARD);
 
         FrontLM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FrontRM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
