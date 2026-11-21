@@ -43,10 +43,6 @@ public class flowerServo {
         flowerServo2.setPosition(-0.75);
     }
 
-    public void stop() {
-        flowerServo1.setPosition(0);
-        flowerServo2.setPosition(0);
-    }
 
 }
 

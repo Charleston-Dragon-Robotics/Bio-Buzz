@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autonumis;
 
 import static com.pedropathing.ivy.Scheduler.schedule;
-import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.ivy.Scheduler;
@@ -14,8 +13,8 @@ import org.firstinspires.ftc.teamcode.Constants;
 public class Auto extends LinearOpMode {
     boolean red = false;
     boolean blue = false;
-    boolean close = false;
-    boolean far = false;
+    boolean left = false;
+    boolean right = false;
     boolean colorSelected = false;
     boolean locationSelected = false;
     boolean confirmed = false;
@@ -30,7 +29,7 @@ public class Auto extends LinearOpMode {
         // name subassembly classes
         // name
 
-        autoBlueFar ABFar = new autoBlueFar();
+        autoBlueRight ABFar = new autoBlueRight();
 
         telemetry.addLine("press X for blue, press B for red");
         telemetry.update();
@@ -51,11 +50,11 @@ public class Auto extends LinearOpMode {
 
         while (!locationSelected) {
             if (gamepad1.dpadDownWasReleased()) {
-                close = true;
+                left = true;
                 locationSelected = true;
             } else {
                 if (gamepad1.dpadUpWasReleased()) {
-                    far = true;
+                    right = true;
                     locationSelected = true;
                 }
             }
@@ -65,13 +64,13 @@ public class Auto extends LinearOpMode {
 
             while (opModeIsActive()) {
                 while (!confirmed) {
-                    if (blue && far) {
+                    if (blue && left) {
                         telemetry.addLine("blue left selected :]");
                         confirmed = true;
-                    } else if (blue && close) {
+                    } else if (blue && right) {
                         telemetry.addLine("blue right selected :]");
                         confirmed = true;
-                    } else if (red && far) {
+                    } else if (red && left) {
                         telemetry.addLine("red left without saying goodbye :(");
                         confirmed = true;
                     } else {
@@ -85,21 +84,21 @@ public class Auto extends LinearOpMode {
                     telemetryFix = true;
                 }
             }
-            if (blue && far) {
+            if (blue && right) {
 //                ABFar.autoRoutine();
                 Follower follower = ABFar.follower;
 
 
                 Scheduler.reset();
                 follower = Constants.create(hardwareMap);
-                follower.setPose(ABFar.startBlueFar);
+                follower.setPose(ABFar.startBlueRight);
 //                schedule(follow(follower, ABFar.launchToFlowerABFar()));
 //                schedule(follow(follower, ABFar.flowerToLaunch()));
 //                schedule(follow(follower, ABFar.launchToFlower2()));
 //                schedule(follow(follower, ABFar.flowerToLaunch2()));
 //                schedule(follow(follower, ABFar.launchToPark()));
 
-                schedule(ABFar.autoBlueFar());
+                schedule(ABFar.autoBlueRight());
 
                 while (opModeIsActive()) {
                     follower.update();

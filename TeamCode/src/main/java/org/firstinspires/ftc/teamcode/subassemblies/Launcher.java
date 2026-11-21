@@ -297,8 +297,9 @@ public class Launcher {
     }
     public void PFlowerLaunch(){
 //        velocity(,,,);
-    }
+    public void PHiveLaunch() {
 
+    }
 
 
     public void set(double Velocity) {
@@ -308,6 +309,7 @@ public class Launcher {
     public void stop() {
         flyWheelM.setPower(0);
     }
+
     public void turnTablePower(double power, boolean Debug) {
 
         turnTableM.setPower(power);
@@ -315,6 +317,7 @@ public class Launcher {
             opmode.telemetry.addData("turnTableServo power", power);
         }
     }
+
     public void turnTableSetPos(double pos, boolean Debug) {
 
         turnTableM.setPower(pos);
