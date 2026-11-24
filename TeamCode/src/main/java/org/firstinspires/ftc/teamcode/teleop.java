@@ -137,6 +137,7 @@ public class teleop extends LinearOpMode {
                 } else if (newGamePad2.a.released) {
                     telemetry.addLine("left trigger");
                     Gate.Active();
+>>>>>>> b576221929f9864a603d5bb8b50e03f6d905ff9d
                 }
 
                 //initialize speed as a variable
