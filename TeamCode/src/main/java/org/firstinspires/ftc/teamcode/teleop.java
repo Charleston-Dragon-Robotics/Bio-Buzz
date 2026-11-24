@@ -96,6 +96,7 @@ public class teleop extends LinearOpMode {
                 Intake.stop();
             }
 
+<<<<<<< HEAD
             if(newGamePad2.dpad_left.released) {
                 Launcher.turnTablePower(-1, true);
             } else if(newGamePad2.dpad_right.released) {
@@ -108,6 +109,7 @@ public class teleop extends LinearOpMode {
                     Launcher.turnTablePower(1, true);
                 } else {
                     Launcher.turnTablePower(0, true);
+=======
 //            if (newGamePad2.left_bumper.state) {
 //                Launcher.turnTablePower(-1, true);
 //            } else if (newGamePad2.right_bumper.state) {
