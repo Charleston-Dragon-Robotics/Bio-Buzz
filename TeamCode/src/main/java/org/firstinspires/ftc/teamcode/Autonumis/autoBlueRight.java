@@ -17,13 +17,9 @@ import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-<<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/autoBlueRight.java
-========
 
-import org.firstinspires.ftc.teamcode.subassemblies.Intake;
-import org.firstinspires.ftc.teamcode.subassemblies.Launcher;
-import org.firstinspires.ftc.teamcode.subassemblies.flowerServo;
->>>>>>>> 234aae29ff18f78ccb7b798edde382edc1e158f6:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonumis/autoBlueFar.java
+import org.firstinspires.ftc.teamcode.subassemblies.*;
+
 
 @Autonomous(name = "autoBlueFar", group = "Autonomous")
 public class autoBlueRight extends LinearOpMode {
@@ -74,23 +70,39 @@ public class autoBlueRight extends LinearOpMode {
     public Command autoBlueRight() {
         return sequential(
                 instant(() -> servoGate.Active()),
-                instant(() -> launch.hiveLaunch(true)),
+                instant(() -> launch.PHiveLaunch()),
                 instant(() -> servoGate.Hold()),
                 parallel(
                         follow(follower, launchToFlowerABFar()),
                         waitMs(1000),
                         instant(() -> Flow.setDown()),
+                        instant(() -> intake.fullPower()),
+                        waitMs(3000)),
+                parallel(
+                        instant(() -> intake.stop()),
+                        follow(follower, flowerToLaunch())),
+                parallel(
+                        instant(() -> servoGate.Active()),
+                        instant(() -> intake.fullPower()),
+                        instant(() -> Flow.setUp())),
+                instant(() -> launch.PHiveLaunch()),
+                instant(() -> intake.stop()),
+                parallel(
+                        follow(follower, launchToFlower2()),
+                        waitMs(2000),
+                        instant(() -> Flow.setDown()),
                         instant(() -> intake.fullPower())),
-                follow(follower, flowerToLaunch()),
-                instant(()
-                instant(() -> launch.hiveLaunch(true)),
-                instant(() -> Flow.setUp()),
-                instant(() -> intake.stop()),
-                follow(follower, launchToFlower2()),
-                instant(() -> Flow.setDown()),
-                instant(() -> intake.fullPower()),
+                        waitMs(3000),
                 follow(follower, flowerToLaunch2()),
-                instant(() -> intake.stop()),
+                parallel(
+                        instant(() -> servoGate.Active()),
+                        instant(() -> Flow.setUp()),
+                        instant(() -> intake.fullPower())
+                ),
+                instant(() -> launch.PHiveLaunch()),
+                parallel(
+                        instant(() -> intake.stop())),
+
                 follow(follower, launchToPark())
         );
     }
